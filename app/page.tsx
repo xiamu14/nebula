@@ -1,12 +1,14 @@
-import { Editor } from "./components/editor/DynamicEditor";
+import MonthView from "./components/calendar/MonthView";
 
 export default function Home() {
   return (
-    <div className="flex justify-center items-center bg-zinc-50 dark:bg-black h-screen overflow-hidden font-sans">
-      <main className="flex flex-col justify-between items-center sm:items-start dark:bg-black px-16 py-1 w-full max-w-3xl h-screen overflow-y-scroll">
-        <div className="bg-white py-2 rounded-xl w-full h-full">
-          <Editor />
+    <div className="bg-linear-to-br from-blue-50 via-white to-purple-50 min-h-screen">
+      <main className="mx-auto py-8 container">
+        <div className="mb-8 text-center">
+          <h1 className="mb-2 font-bold text-gray-900 text-4xl">Nebula</h1>
+          <p className="text-gray-600">生活计划记录 · 情绪追踪 · 健康管理</p>
         </div>
+        <MonthView />
       </main>
     </div>
   );

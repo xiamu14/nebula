@@ -7,3 +7,50 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model DayMeta {
+  id        String   @id @default(cuid())
+  date      DateTime @unique @db.Date
+  markdown  String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  struct    DayStruct?
+
+  @@index([date])
+}
+
+model DayStruct {
+  id            String   @id @default(cuid())
+  dayMetaId     String   @unique
+  dayMeta       DayMeta  @relation(fields: [dayMetaId], references: [id], onDelete: Cascade)
+
+  // 餐饮完成度统计
+  breakfastTotal     Int @default(0)
+  breakfastCompleted Int @default(0)
+  lunchTotal         Int @default(0)
+  lunchCompleted     Int @default(0)
+  dinnerTotal        Int @default(0)
+  dinnerCompleted    Int @default(0)
+  drinksTotal        Int @default(0)
+  drinksCompleted    Int @default(0)
+  snacksTotal        Int @default(0)
+  snacksCompleted    Int @default(0)
+
+  // 运动统计
+  exerciseTotal      Int @default(0)
+  exerciseCompleted  Int @default(0)
+  totalDuration      Int @default(0) // 总运动时长(分钟)
+  totalCalories      Int @default(0) // 总消耗卡路里
+
+  // 心情数据 (JSON格式存储: {"平静": 0.4, "愉悦": 0.8})
+  mood               Json @default("{}")
+
+  // 整体充实度评分 (0-1)
+  enrichmentScore    Float @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([dayMetaId])
+}
