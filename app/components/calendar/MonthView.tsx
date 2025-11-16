@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import DayEditorModal from "../DayEditorModal";
+import { cn } from "@/app/utils/cn";
 
 interface DayData {
   date: string;
@@ -30,7 +31,7 @@ export default function MonthView({
   const [daysData, setDaysData] = useState<Record<string, DayData>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [todayDate, setTodayDate] = useState<string>('');
+  const [todayDate, setTodayDate] = useState<string>("");
 
   // Load month data
   useEffect(() => {
@@ -110,6 +111,7 @@ export default function MonthView({
 
   const daysInMonth = getDaysInMonth(currentYear, currentMonth);
   const firstDay = getFirstDayOfMonth(currentYear, currentMonth);
+  const lastDay = 7 - ((firstDay + daysInMonth) % 7);
 
   const weekDays = ["日", "一", "二", "三", "四", "五", "六"];
 
@@ -117,117 +119,59 @@ export default function MonthView({
   const getMoodInfo = (mood: Record<string, number>) => {
     const moodColors: Record<
       string,
-      { bg: string; border: string; text: string }
+      { bg: string; border: string; text: string; "fill:bg": string }
     > = {
-      平静: {
-        bg: "bg-blue-50",
-        border: "border-blue-200",
-        text: "text-blue-600",
+      quiet: {
+        bg: "#f5f3ff", // 50
+        border: "#ece9fe", //100
+        text: "#7839ef", //600
+        "fill:bg": "#ddd6fe",
       },
-      愉悦: {
-        bg: "bg-yellow-50",
-        border: "border-yellow-200",
-        text: "text-yellow-700",
+      negative: {
+        bg: "#f8fafc", // 50
+        border: "#eef2f6", //100
+        text: "#4b5565", //600
+        "fill:bg": "#e3e8ef",
       },
-      开心: {
-        bg: "bg-green-50",
-        border: "border-green-200",
-        text: "text-green-600",
-      },
-      快乐: {
-        bg: "bg-green-50",
-        border: "border-green-200",
-        text: "text-green-600",
-      },
-      沮丧: {
-        bg: "bg-gray-50",
-        border: "border-gray-300",
-        text: "text-gray-600",
-      },
-      压力: { bg: "bg-red-50", border: "border-red-200", text: "text-red-600" },
-      焦虑: {
-        bg: "bg-orange-50",
-        border: "border-orange-200",
-        text: "text-orange-600",
+      positive: {
+        bg: "#f3fee7", // 50
+        border: "#e4fbcc", //100
+        text: "#4ca30d", //600
+        "fill:bg": "#d0f8ab",
       },
     };
-
-    if (Object.keys(mood).length === 0) {
-      return {
-        name: "",
-        value: 0,
-        colors: {
-          bg: "bg-white",
-          border: "border-gray-200",
-          text: "text-gray-600",
-        },
-      };
-    }
-
-    let maxMood = "";
-    let maxValue = 0;
-    Object.entries(mood).forEach(([key, value]) => {
-      if (value > maxValue) {
-        maxMood = key;
-        maxValue = value;
-      }
-    });
+    // 拆解心情指示
 
     return {
-      name: maxMood,
-      value: maxValue,
-      colors: moodColors[maxMood] || {
-        bg: "bg-purple-50",
-        border: "border-purple-200",
-        text: "text-purple-600",
-      },
+      name: "负面",
+      value: 10,
+      colors: moodColors["negative"],
     };
   };
 
-  const getEnrichmentColors = (score: number) => {
-    if (score >= 0.8)
-      return {
-        bg: "bg-green-50",
-        border: "border-green-400",
-        text: "text-green-700",
-      };
-    if (score >= 0.6)
-      return {
-        bg: "bg-green-50",
-        border: "border-green-300",
-        text: "text-green-600",
-      };
-    if (score >= 0.4)
-      return {
-        bg: "bg-yellow-50",
-        border: "border-yellow-300",
-        text: "text-yellow-700",
-      };
-    if (score >= 0.2)
-      return {
-        bg: "bg-orange-50",
-        border: "border-orange-300",
-        text: "text-orange-600",
-      };
-    if (score > 0)
-      return {
-        bg: "bg-red-50",
-        border: "border-red-300",
-        text: "text-red-600",
-      };
-    return { bg: "bg-white", border: "border-gray-200", text: "text-gray-400" };
+  const getEnrichmentColors = () => {
+    return {
+      bg: "#eff4ff", // 50
+      border: "#d1e0ff", //100
+      text: "#155eef", //600
+      "fill:bg": "#b2ccff", //200
+    };
   };
 
   return (
     <div className="mx-auto p-4 w-full max-w-6xl">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
+        <h2 className="font-semibold text-gray-500 text-2xl">
+          {currentYear}年 {currentMonth}月
+        </h2>
+        <div className="flex-1"></div>
         <button
           onClick={handlePrevMonth}
-          className="hover:bg-gray-100 p-2 rounded-lg transition-colors"
+          className="hover:bg-gray-100 p-2 rounded-lg transition-colors cursor-pointer"
         >
           <svg
-            className="w-6 h-6"
+            className="w-4 h-4"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -241,16 +185,12 @@ export default function MonthView({
           </svg>
         </button>
 
-        <h2 className="font-semibold text-2xl">
-          {currentYear}年 {currentMonth}月
-        </h2>
-
         <button
           onClick={handleNextMonth}
-          className="hover:bg-gray-100 p-2 rounded-lg transition-colors"
+          className="hover:bg-gray-100 p-2 rounded-lg transition-colors cursor-pointer"
         >
           <svg
-            className="w-6 h-6"
+            className="w-4 h-4"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -266,15 +206,17 @@ export default function MonthView({
       </div>
 
       {/* Calendar Grid */}
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
         {/* Week day headers */}
         <div className="grid grid-cols-7">
           {weekDays.map((day) => (
             <div
               key={day}
-              className="bg-gray-50 p-3 font-semibold text-gray-700 text-center"
+              className={cn(
+                "p-2.5 border border-gray-200 border-t-0 last:border-r-0 border-b-0 border-l-0 font-semibold text-gray-700 text-sm text-center"
+              )}
             >
-              {day}
+              周{day}
             </div>
           ))}
         </div>
@@ -285,7 +227,7 @@ export default function MonthView({
           {Array.from({ length: firstDay }).map((_, index) => (
             <div
               key={`empty-${index}`}
-              className="border border-gray-100 aspect-square"
+              className="border border-gray-200 last:border-r-0 border-b-0 border-l-0 aspect-square"
             />
           ))}
 
@@ -299,79 +241,82 @@ export default function MonthView({
             const dayData = daysData[dateStr];
             const isToday = dateStr === new Date().toISOString().split("T")[0];
 
-            const enrichmentColors = dayData?.hasData
-              ? getEnrichmentColors(dayData.enrichmentScore)
-              : {
-                  bg: "bg-white",
-                  border: "",
-                  text: "text-gray-400",
-                };
-            const moodInfo = dayData?.hasData
-              ? getMoodInfo(dayData.mood)
-              : {
-                  name: "",
-                  value: 0,
-                  colors: {
-                    bg: "bg-white",
-                    border: "",
-                    text: "text-gray-600",
-                  },
-                };
+            const enrichmentColors = getEnrichmentColors();
+
+            const moodInfo = getMoodInfo(dayData?.mood);
 
             return (
               <div
                 key={day}
                 onClick={() => handleDayClick(day)}
-                className={`
-                  aspect-square border border-gray-100 p-2 cursor-pointer
-                   transition-all relative
-                  ${isToday ? "bg-gray-200" : ""}
-                `}
+                className={cn(
+                  `relative hover:bg-gray-50 p-2 border border-gray-200 border-b-0 border-l-0 aspect-square transition-all cursor-pointer`,
+                  {
+                    "border-r-0": (index + firstDay + 1) % 7 === 0,
+                  }
+                )}
               >
                 <div
-                  className={`font-semibold ${
-                    isToday ? "text-blue-600" : "text-gray-700"
-                  }`}
+                  className={cn(`text-gray-600`, {
+                    "bg-purple-500 flex w-6 h-6 justify-center items-center rounded-full text-white":
+                      isToday,
+                  })}
                 >
-                  {day}
+                  <span className="p-0 font-semibold text-sm">{day}</span>
                 </div>
 
                 {dayData?.hasData && (
                   <div className="space-y-2 mt-2">
                     {/* Enrichment progress bar */}
                     <div
-                      className={`relative h-5 rounded-full ${enrichmentColors.bg} ${enrichmentColors.border} border overflow-hidden`}
+                      className={`relative h-6 rounded-full border overflow-hidden`}
+                      style={{
+                        backgroundColor: enrichmentColors.bg,
+                        borderColor: enrichmentColors.border,
+                        color: enrichmentColors.border,
+                      }}
                     >
                       <div
-                        className={`h-full ${enrichmentColors.border.replace(
-                          "border-",
-                          "bg-"
-                        )} transition-all`}
-                        style={{ width: `${dayData.enrichmentScore * 100}%` }}
+                        className={`h-full transition-all`}
+                        style={{
+                          width: "40%",
+                          background: enrichmentColors["fill:bg"],
+                        }}
                       />
                       <div
-                        className={`absolute inset-0 flex items-center justify-center text-[10px] font-medium ${enrichmentColors.text}`}
+                        className={`absolute inset-0 flex items-center justify-center text-[10px] font-medium `}
+                        style={{
+                          color: enrichmentColors.text,
+                        }}
                       >
-                        充实
+                        充实:0.4
                       </div>
                     </div>
 
                     {/* Mood progress bar */}
                     {moodInfo.name && (
                       <div
-                        className={`relative h-5 rounded-full ${moodInfo.colors.bg} ${moodInfo.colors.border} border overflow-hidden`}
+                        className={`relative h-6 rounded-full border overflow-hidden`}
+                        style={{
+                          backgroundColor: moodInfo.colors.bg,
+                          borderColor: moodInfo.colors.border,
+                          color: moodInfo.colors.border,
+                        }}
                       >
                         <div
-                          className={`h-full ${moodInfo.colors.border.replace(
-                            "border-",
-                            "bg-"
-                          )} transition-all`}
-                          style={{ width: `${moodInfo.value * 100}%` }}
+                          className={`h-full transition-all`}
+                          style={{
+                            width: "30%",
+                            background: moodInfo.colors["fill:bg"],
+                          }}
                         />
                         <div
-                          className={`absolute inset-0 flex items-center justify-center text-[10px] font-medium ${moodInfo.colors.text}`}
+                          className={`absolute inset-0 flex items-center justify-center text-[10px] font-medium `}
+                          style={{
+                            color: moodInfo.colors.text,
+                          }}
                         >
-                          {moodInfo.name}
+                          {moodInfo.name}:0.3
                         </div>
                       </div>
                     )}
@@ -380,6 +325,14 @@ export default function MonthView({
               </div>
             );
           })}
+
+          {/* Empty cells for days after month ends */}
+          {Array.from({ length: lastDay }).map((_, index) => (
+            <div
+              key={`empty-${index}`}
+              className="border border-gray-200 last:border-r-0 border-b-0 border-l-0 aspect-square"
+            />
+          ))}
         </div>
       </div>
 
