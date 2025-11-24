@@ -58,16 +58,14 @@ export default function Modal({
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path d="M6 18L18 6M6 6l12 12"></path>
+              <svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M17 7L7 17M7 7L17 17"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </button>
           </div>

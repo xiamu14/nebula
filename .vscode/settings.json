@@ -1,15 +1,20 @@
 {
-    "files.exclude": {
-        "**/.git": true,
-        "**/.svn": true,
-        "**/.hg": true,
-        "**/.DS_Store": true,
-        "**/Thumbs.db": true
-    },
-    "hide-files.files": [],
-    "cSpell.words": [
-        "autoincrement",
-        "blocknote",
-        "OPENROUTER"
-    ]
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/*.blob": true,
+    "**/*.csproj": true
+  },
+  "hide-files.files": [],
+  "cSpell.words": [
+    "autoincrement",
+    "Bento",
+    "blocknote",
+    "HIIT",
+    "iconify",
+    "OPENROUTER"
+  ]
 }

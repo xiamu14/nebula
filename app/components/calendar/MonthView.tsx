@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import DayEditorModal from "../DayEditorModal";
 import { cn } from "@/app/utils/cn";
+import MyDialog, { controlRef } from "../ui/Dialog";
 
 interface DayData {
   date: string;
@@ -23,26 +24,23 @@ export default function MonthView({
   onDateClick,
 }: MonthViewProps) {
   const [currentYear, setCurrentYear] = useState(
-    year || new Date().getFullYear()
+    year || new Date().getFullYear(),
   );
   const [currentMonth, setCurrentMonth] = useState(
-    month || new Date().getMonth() + 1
+    month || new Date().getMonth() + 1,
   );
   const [daysData, setDaysData] = useState<Record<string, DayData>>({});
-  const [isLoading, setIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [todayDate, setTodayDate] = useState<string>("");
-
+  const DialogControlRef = useRef<controlRef>(null);
   // Load month data
   useEffect(() => {
     loadMonthData();
   }, [currentYear, currentMonth]);
 
   const loadMonthData = async () => {
-    setIsLoading(true);
     try {
       const response = await fetch(
-        `/api/month?year=${currentYear}&month=${currentMonth}`
+        `/api/month?year=${currentYear}&month=${currentMonth}`,
       );
       const { days } = await response.json();
 
@@ -61,8 +59,6 @@ export default function MonthView({
       setDaysData(dataMap);
     } catch (error) {
       console.error("Error loading month data:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -95,9 +91,10 @@ export default function MonthView({
   const handleDayClick = (day: number) => {
     const dateStr = `${currentYear}-${String(currentMonth).padStart(
       2,
-      "0"
+      "0",
     )}-${String(day).padStart(2, "0")}`;
     setSelectedDate(dateStr);
+    DialogControlRef.current?.open();
     if (onDateClick) {
       onDateClick(dateStr);
     }
@@ -213,7 +210,7 @@ export default function MonthView({
             <div
               key={day}
               className={cn(
-                "p-2.5 border border-gray-200 border-t-0 last:border-r-0 border-b-0 border-l-0 font-semibold text-gray-700 text-sm text-center"
+                "p-2.5 border border-gray-200 border-t-0 last:border-r-0 border-b-0 border-l-0 font-semibold text-gray-700 text-sm text-center",
               )}
             >
               周{day}
@@ -236,7 +233,7 @@ export default function MonthView({
             const day = index + 1;
             const dateStr = `${currentYear}-${String(currentMonth).padStart(
               2,
-              "0"
+              "0",
             )}-${String(day).padStart(2, "0")}`;
             const dayData = daysData[dateStr];
             const isToday = dateStr === new Date().toISOString().split("T")[0];
@@ -253,7 +250,7 @@ export default function MonthView({
                   `relative hover:bg-gray-50 p-2 border border-gray-200 border-b-0 border-l-0 aspect-square transition-all cursor-pointer`,
                   {
                     "border-r-0": (index + firstDay + 1) % 7 === 0,
-                  }
+                  },
                 )}
               >
                 <div
@@ -335,15 +332,7 @@ export default function MonthView({
           ))}
         </div>
       </div>
-
-      {/* Modal */}
-      {selectedDate && (
-        <DayEditorModal
-          isOpen={!!selectedDate}
-          onClose={handleModalClose}
-          date={selectedDate}
-        />
-      )}
+      <MyDialog controlRef={DialogControlRef} />
     </div>
   );
 }
