@@ -21,6 +21,7 @@
     "@prisma/extension-accelerate": "^2.0.2",
     "@untitledui/icons": "^0.0.19",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.19",
     "dotenv": "^17.2.3",
     "motion": "^12.23.24",
     "next": "16.0.3",
@@ -34,7 +35,8 @@
     "recharts": "^3.4.1",
     "tailwind-merge": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
-    "tailwindcss-react-aria-components": "^2.0.1"
+    "tailwindcss-react-aria-components": "^2.0.1",
+    "valtio": "^2.2.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.17",

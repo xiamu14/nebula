@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Weight {
+  id    Int     @id @default(autoincrement())
+  date  DateTime @unique
+  value Decimal @db.Decimal(5, 2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

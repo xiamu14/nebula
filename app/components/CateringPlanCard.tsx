@@ -1,16 +1,27 @@
+import React from "react";
 import {
   Button,
   Card,
   Checkbox,
   CheckboxGroup,
+  CloseButton,
   Description,
+  FieldError,
+  FieldGroup,
+  Fieldset,
+  Form,
+  Input,
+  InputGroup,
   Label,
   Modal,
   Tabs,
+  TextField,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 
 export default function CateringPlanCard() {
+  const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
+
   return (
     <Card className="h-full w-full">
       <Card.Header>
@@ -57,8 +68,12 @@ export default function CateringPlanCard() {
             </CheckboxGroup>
           </Tabs.Panel>
           <Tabs.Panel className="pt-4" id="analytics">
-            <CheckboxGroup name="breakfast">
-              <Checkbox value="milk">
+            <CheckboxGroup name="Launch">
+              <Checkbox
+                value="milk"
+                onMouseEnter={() => setHoveredIndex(0)}
+                onMouseLeave={() => setHoveredIndex(null)}
+              >
                 <Checkbox.Control>
                   <Checkbox.Indicator />
                 </Checkbox.Control>
@@ -66,8 +81,14 @@ export default function CateringPlanCard() {
                   <Label>milk</Label>
                   <Description>300k</Description>
                 </Checkbox.Content>
+                <div className="flex-1"></div>
+                {hoveredIndex === 0 && <CloseButton />}
               </Checkbox>
-              <Checkbox value="baozi">
+              <Checkbox
+                value="baozi"
+                onMouseEnter={() => setHoveredIndex(1)}
+                onMouseLeave={() => setHoveredIndex(null)}
+              >
                 <Checkbox.Control>
                   <Checkbox.Indicator />
                 </Checkbox.Control>
@@ -75,18 +96,20 @@ export default function CateringPlanCard() {
                   <Label>baozi</Label>
                   <Description>100k</Description>
                 </Checkbox.Content>
+                <div className="flex-1"></div>
+                {hoveredIndex === 1 && <CloseButton />}
               </Checkbox>
             </CheckboxGroup>
           </Tabs.Panel>
           <Tabs.Panel className="pt-4" id="reports">
-            <CheckboxGroup name="breakfast">
-              <Checkbox value="milk">
+            <CheckboxGroup name="Fruit">
+              <Checkbox value="Orange">
                 <Checkbox.Control>
                   <Checkbox.Indicator />
                 </Checkbox.Control>
                 <Checkbox.Content>
-                  <Label>milk</Label>
-                  <Description>300k</Description>
+                  <Label>Orange</Label>
+                  <Description>300g</Description>
                 </Checkbox.Content>
               </Checkbox>
               <Checkbox value="baozi">
@@ -105,29 +128,53 @@ export default function CateringPlanCard() {
       <Card.Footer>
         <Modal>
           <Button variant="ghost">New</Button>
-          <Modal.Container>
+          <Modal.Container className="w-[500px]">
             <Modal.Dialog className="sm:max-w-[360px]">
               {({ close }) => (
                 <>
                   <Modal.CloseTrigger />
-                  <Modal.Header>
-                    <Modal.Icon className="bg-default text-foreground">
-                      <Icon className="size-5" icon="gravity-ui:rocket" />
-                    </Modal.Icon>
-                    <Modal.Heading>Welcome to HeroUI</Modal.Heading>
-                  </Modal.Header>
+
                   <Modal.Body>
-                    <p>
-                      A beautiful, fast, and modern React UI library for
-                      building accessible and customizable web applications with
-                      ease.
-                    </p>
+                    <Form className="w-full max-w-96" onSubmit={() => {}}>
+                      <Fieldset>
+                        <Fieldset.Legend className="mb-4">
+                          Update Diet{" "}
+                        </Fieldset.Legend>
+
+                        <FieldGroup>
+                          <TextField id="plan-name">
+                            <Label>Food</Label>
+                            <Input placeholder="e.g. Milk" />
+                            <FieldError />
+                          </TextField>
+                          <TextField>
+                            <Label>Weight</Label>
+                            <InputGroup>
+                              <InputGroup.Input
+                                className="w-full max-w-[280px]"
+                                defaultValue="100"
+                                type="number"
+                              />
+                              <InputGroup.Suffix>g</InputGroup.Suffix>
+                            </InputGroup>
+                          </TextField>
+                        </FieldGroup>
+                        <Fieldset.Actions className="justify-end">
+                          <Button
+                            type="reset"
+                            variant="secondary"
+                            onClick={close}
+                          >
+                            Cancel
+                          </Button>
+                          <Button type="submit">
+                            <Icon icon="gravity-ui:floppy-disk" />
+                            Save
+                          </Button>
+                        </Fieldset.Actions>
+                      </Fieldset>
+                    </Form>
                   </Modal.Body>
-                  <Modal.Footer>
-                    <Button className="w-full" onPress={close}>
-                      Continue
-                    </Button>
-                  </Modal.Footer>
                 </>
               )}
             </Modal.Dialog>

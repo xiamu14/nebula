@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma/client";
-import { DayStructData } from "@/lib/types/day";
+import { prisma } from "@/prisma/client";
+import { DayStructData } from "@/types/day";
 
 // Mock API - 不调用 AI,使用简单的解析逻辑
 export async function POST(request: NextRequest) {
@@ -12,21 +12,26 @@ export async function POST(request: NextRequest) {
     if (!markdown || !date) {
       return NextResponse.json(
         { error: "Markdown and date are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     console.log("[Mock Analytic API] Parsing markdown manually...");
 
     // 简单的解析逻辑
-    const lines = markdown.split('\n');
+    const lines = markdown.split("\n");
 
     // 计算餐饮项目
-    const breakfastItems = markdown.match(/### Breakfast\s+([\s\S]*?)(?=###|---)/)?.[1] || '';
-    const lunchItems = markdown.match(/### Lunch\s+([\s\S]*?)(?=###|---)/)?.[1] || '';
-    const dinnerItems = markdown.match(/### Dinner\s+([\s\S]*?)(?=###|---)/)?.[1] || '';
-    const drinksItems = markdown.match(/### Drinks\s+([\s\S]*?)(?=###|---)/)?.[1] || '';
-    const snacksItems = markdown.match(/### Snacks\s+([\s\S]*?)(?=###|---)/)?.[1] || '';
+    const breakfastItems =
+      markdown.match(/### Breakfast\s+([\s\S]*?)(?=###|---)/)?.[1] || "";
+    const lunchItems =
+      markdown.match(/### Lunch\s+([\s\S]*?)(?=###|---)/)?.[1] || "";
+    const dinnerItems =
+      markdown.match(/### Dinner\s+([\s\S]*?)(?=###|---)/)?.[1] || "";
+    const drinksItems =
+      markdown.match(/### Drinks\s+([\s\S]*?)(?=###|---)/)?.[1] || "";
+    const snacksItems =
+      markdown.match(/### Snacks\s+([\s\S]*?)(?=###|---)/)?.[1] || "";
 
     const countItems = (text: string) => {
       const total = (text.match(/- \[[ x]\]/g) || []).length;
@@ -41,15 +46,18 @@ export async function POST(request: NextRequest) {
     const snacks = countItems(snacksItems);
 
     // 计算运动项目
-    const exerciseSection = markdown.match(/## Exercise\s+([\s\S]*?)(?=---|## Notes)/)?.[1] || '';
-    const exerciseRows = exerciseSection.split('\n').filter(line => line.includes('|') && !line.includes('完成'));
+    const exerciseSection =
+      markdown.match(/## Exercise\s+([\s\S]*?)(?=---|## Notes)/)?.[1] || "";
+    const exerciseRows = exerciseSection
+      .split("\n")
+      .filter((line) => line.includes("|") && !line.includes("完成"));
     const exerciseTotal = Math.max(0, exerciseRows.length - 1); // 减去表头
     const exerciseCompleted = exerciseSection.match(/✅/g)?.length || 0;
 
     // 简单计算时长和卡路里
     let totalDuration = 0;
     let totalCalories = 0;
-    exerciseRows.forEach(row => {
+    exerciseRows.forEach((row) => {
       const durationMatch = row.match(/\|\s*(\d+)\s*\|/);
       const calorieMatch = row.match(/\|\s*\d+\s*\|\s*(\d+)\s*\|/);
       if (durationMatch) totalDuration += parseInt(durationMatch[1]) || 0;
@@ -57,10 +65,12 @@ export async function POST(request: NextRequest) {
     });
 
     // 解析心情
-    const moodSection = markdown.match(/## Mood\s+([\s\S]*?)$/)?.[1] || '';
+    const moodSection = markdown.match(/## Mood\s+([\s\S]*?)$/)?.[1] || "";
     const mood: Record<string, number> = {};
-    const moodLines = moodSection.split('\n').filter(line => line.includes(':'));
-    moodLines.forEach(line => {
+    const moodLines = moodSection
+      .split("\n")
+      .filter((line) => line.includes(":"));
+    moodLines.forEach((line) => {
       const match = line.match(/- (.*?):\s*([\d.]+)/);
       if (match) {
         mood[match[1]] = parseFloat(match[2]);
@@ -68,8 +78,20 @@ export async function POST(request: NextRequest) {
     });
 
     // 计算充实度
-    const totalItems = breakfast.total + lunch.total + dinner.total + drinks.total + snacks.total + exerciseTotal;
-    const completedItems = breakfast.completed + lunch.completed + dinner.completed + drinks.completed + snacks.completed + exerciseCompleted;
+    const totalItems =
+      breakfast.total +
+      lunch.total +
+      dinner.total +
+      drinks.total +
+      snacks.total +
+      exerciseTotal;
+    const completedItems =
+      breakfast.completed +
+      lunch.completed +
+      dinner.completed +
+      drinks.completed +
+      snacks.completed +
+      exerciseCompleted;
     const enrichmentScore = totalItems > 0 ? completedItems / totalItems : 0;
 
     const validatedData: DayStructData = {
@@ -115,9 +137,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: dayStruct,
-      note: "This is a mock response without AI analysis"
+      note: "This is a mock response without AI analysis",
     });
-
   } catch (error) {
     console.error("[Mock Analytic API] Error:", error);
     return NextResponse.json(
@@ -125,7 +146,7 @@ export async function POST(request: NextRequest) {
         error: "Failed to analyze day data",
         details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

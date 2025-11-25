@@ -1,4 +1,4 @@
-import { Card, Chip } from "@heroui/react";
+import { Card, Chip, CloseButton } from "@heroui/react";
 import { Icon } from "@iconify/react";
 
 export default function EmotionCard() {
@@ -11,10 +11,24 @@ export default function EmotionCard() {
         <Chip color="success" variant="primary">
           <Icon icon="gravity-ui:circle-fill" width={6} />
           Joyful
+          <Icon
+            icon="gravity-ui:circle-minus"
+            width={12}
+            className="cursor-pointer"
+          />
         </Chip>
         <Chip color="warning" variant="primary">
           <Icon icon="gravity-ui:circle-fill" width={6} />
           Quiet
+          <Icon
+            icon="gravity-ui:circle-minus"
+            width={12}
+            className="cursor-pointer"
+          />
+        </Chip>
+        <Chip className="cursor-pointer">
+          <Icon icon="gravity-ui:circle-dashed" width={12} />
+          New
         </Chip>
       </Card.Content>
     </Card>

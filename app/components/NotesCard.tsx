@@ -1,4 +1,4 @@
-import { Button, Card } from "@heroui/react";
+import { Button, Card, Modal, TextArea } from "@heroui/react";
 import { CardStack } from "./ui/CardStack";
 import { Highlight } from "./Highlight";
 
@@ -54,7 +54,39 @@ export default function NotesCard() {
         </div>
       </Card.Content>
       <Card.Footer>
-        <Button variant="ghost">New</Button>
+        <Modal>
+          <Button variant="ghost">Update</Button>
+          <Modal.Container>
+            <Modal.Dialog className="w-[400px] sm:max-w-[360px]">
+              {({ close }) => (
+                <>
+                  <Modal.CloseTrigger />
+                  <Modal.Header>
+                    <Modal.Icon className="bg-default text-foreground">
+                      <img
+                        className="h-full w-full rounded-full"
+                        src="https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/blue.jpg"
+                      />
+                    </Modal.Icon>
+                    <Modal.Heading>Update Notes</Modal.Heading>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <TextArea
+                      aria-label="The present harvest"
+                      className="h-[300px] w-full"
+                      placeholder="Share a harvest..."
+                    />
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button className="w-full" onPress={close}>
+                      Save
+                    </Button>
+                  </Modal.Footer>
+                </>
+              )}
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal>
       </Card.Footer>
     </Card>
   );

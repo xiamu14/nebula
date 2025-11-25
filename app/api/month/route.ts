@@ -1,15 +1,18 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma/client';
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/prisma/client";
 
 // GET /api/month?year=2025&month=11
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const yearStr = searchParams.get('year');
-    const monthStr = searchParams.get('month');
+    const yearStr = searchParams.get("year");
+    const monthStr = searchParams.get("month");
 
     if (!yearStr || !monthStr) {
-      return NextResponse.json({ error: 'Year and month parameters are required' }, { status: 400 });
+      return NextResponse.json(
+        { error: "Year and month parameters are required" },
+        { status: 400 },
+      );
     }
 
     const year = parseInt(yearStr);
@@ -30,13 +33,16 @@ export async function GET(request: NextRequest) {
         struct: true,
       },
       orderBy: {
-        date: 'asc',
+        date: "asc",
       },
     });
 
     return NextResponse.json({ days });
   } catch (error) {
-    console.error('Error fetching month data:', error);
-    return NextResponse.json({ error: 'Failed to fetch month data' }, { status: 500 });
+    console.error("Error fetching month data:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch month data" },
+      { status: 500 },
+    );
   }
 }

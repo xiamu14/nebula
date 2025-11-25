@@ -63,7 +63,7 @@ export default function ExerciseCard() {
       </Card.Content>
       <Card.Footer>
         <Modal>
-          <Button variant="ghost">New</Button>
+          <Button variant="ghost">Update</Button>
           <Modal.Container>
             <Modal.Dialog className="sm:max-w-[360px]">
               {({ close }) => (

@@ -1,14 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma/client';
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/prisma/client";
 
 // GET /api/day?date=2025-11-16
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const dateStr = searchParams.get('date');
+    const dateStr = searchParams.get("date");
 
     if (!dateStr) {
-      return NextResponse.json({ error: 'Date parameter is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: "Date parameter is required" },
+        { status: 400 },
+      );
     }
 
     const date = new Date(dateStr);
@@ -20,8 +23,11 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ dayMeta });
   } catch (error) {
-    console.error('Error fetching day data:', error);
-    return NextResponse.json({ error: 'Failed to fetch day data' }, { status: 500 });
+    console.error("Error fetching day data:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch day data" },
+      { status: 500 },
+    );
   }
 }
 
@@ -31,7 +37,10 @@ export async function POST(request: NextRequest) {
     const { date, markdown } = await request.json();
 
     if (!date || !markdown) {
-      return NextResponse.json({ error: 'Date and markdown are required' }, { status: 400 });
+      return NextResponse.json(
+        { error: "Date and markdown are required" },
+        { status: 400 },
+      );
     }
 
     const dateObj = new Date(date);
@@ -44,7 +53,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ dayMeta });
   } catch (error) {
-    console.error('Error saving day data:', error);
-    return NextResponse.json({ error: 'Failed to save day data' }, { status: 500 });
+    console.error("Error saving day data:", error);
+    return NextResponse.json(
+      { error: "Failed to save day data" },
+      { status: 500 },
+    );
   }
 }

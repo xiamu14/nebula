@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
-import { prisma } from "@/lib/prisma/client";
-import { DayStructData } from "@/lib/types/day";
+import { prisma } from "@/prisma/client";
+import { DayStructData } from "@/types/day";
 
 export const maxDuration = 60;
 
@@ -15,12 +15,14 @@ const openai = new OpenAI({
 export async function POST(request: NextRequest) {
   try {
     const { markdown, date } = await request.json();
-    console.log(`[Analytic] Start: date=${date}, markdown=${markdown?.length}chars`);
+    console.log(
+      `[Analytic] Start: date=${date}, markdown=${markdown?.length}chars`,
+    );
 
     if (!markdown || !date) {
       return NextResponse.json(
         { error: "Markdown and date are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -70,7 +72,7 @@ ${markdown}
     console.log("[Analytic] Message keys:", Object.keys(message));
 
     // 某些模型会把内容放在 reasoning 字段
-    const aiResponse = message.content || (message as any).reasoning || '';
+    const aiResponse = message.content || (message as any).reasoning || "";
 
     if (!aiResponse) {
       console.error("[Analytic] Empty response, full message:", message);
@@ -83,7 +85,9 @@ ${markdown}
     let structData: DayStructData;
     try {
       const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
-      structData = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(aiResponse);
+      structData = jsonMatch
+        ? JSON.parse(jsonMatch[0])
+        : JSON.parse(aiResponse);
     } catch (parseError) {
       console.error("[Analytic] Parse failed:", aiResponse.substring(0, 500));
       throw new Error("Failed to parse AI response as JSON");
@@ -105,7 +109,10 @@ ${markdown}
       totalDuration: structData.totalDuration || 0,
       totalCalories: structData.totalCalories || 0,
       mood: structData.mood || {},
-      enrichmentScore: Math.max(0, Math.min(1, structData.enrichmentScore || 0)),
+      enrichmentScore: Math.max(
+        0,
+        Math.min(1, structData.enrichmentScore || 0),
+      ),
     };
 
     console.log("[Analytic] Saving to DB...");
@@ -123,17 +130,21 @@ ${markdown}
       create: { dayMetaId: dayMeta.id, ...validatedData },
     });
 
-    console.log(`[Analytic] ✓ Completed (score: ${validatedData.enrichmentScore})`);
+    console.log(
+      `[Analytic] ✓ Completed (score: ${validatedData.enrichmentScore})`,
+    );
     return NextResponse.json({ success: true, data: dayStruct });
-
   } catch (error) {
-    console.error("[Analytic] Error:", error instanceof Error ? error.message : error);
+    console.error(
+      "[Analytic] Error:",
+      error instanceof Error ? error.message : error,
+    );
     return NextResponse.json(
       {
         error: "Failed to analyze day data",
         details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

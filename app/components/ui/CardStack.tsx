@@ -1,6 +1,7 @@
 "use client";
 import { Ref, useEffect, useImperativeHandle, useState } from "react";
 import { motion } from "motion/react";
+import { Icon } from "@iconify/react";
 
 type Card = {
   id: number;
@@ -47,12 +48,12 @@ export const CardStack = ({
   }));
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative h-full w-full">
       {cards.map((card, index) => {
         return (
           <motion.div
             key={card.id}
-            className="absolute flex flex-col justify-between bg-white dark:bg-black shadow-black/10 shadow-xl dark:shadow-white/5 p-4 border border-neutral-200 dark:border-white/10 rounded-3xl w-full h-full"
+            className="absolute flex h-full w-full flex-col justify-between rounded-3xl border border-neutral-200 bg-white p-4 shadow-xl shadow-black/10 dark:border-white/10 dark:bg-black dark:shadow-white/5"
             style={{
               transformOrigin: "top center",
             }}
@@ -65,13 +66,22 @@ export const CardStack = ({
             <div className="font-normal text-neutral-700 dark:text-neutral-200">
               {card.content}
             </div>
-            <div>
-              <p className="font-medium text-neutral-500 dark:text-white">
-                {card.name}
-              </p>
-              <p className="font-normal text-neutral-400 dark:text-neutral-200">
-                {card.designation}
-              </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-neutral-500 dark:text-white">
+                  {card.name}
+                </p>
+                <p className="font-normal text-neutral-400 dark:text-neutral-200">
+                  {card.designation}
+                </p>
+              </div>
+              <div className="cursor-pointer">
+                <Icon
+                  icon="gravity-ui:pencil-to-line"
+                  width={20}
+                  color="#999"
+                />
+              </div>
             </div>
           </motion.div>
         );
