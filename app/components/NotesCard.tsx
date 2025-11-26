@@ -55,7 +55,7 @@ export default function NotesCard() {
       </Card.Content>
       <Card.Footer>
         <Modal>
-          <Button variant="ghost">Update</Button>
+          <Button variant="ghost">New</Button>
           <Modal.Container>
             <Modal.Dialog className="w-[400px] sm:max-w-[360px]">
               {({ close }) => (

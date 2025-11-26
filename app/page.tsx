@@ -5,8 +5,11 @@ import CateringPlanCard from "./components/CateringPlanCard";
 import ExerciseCard from "./components/ExerciseCard";
 import EmotionCard from "./components/EmotionCard";
 import NotesCard from "./components/NotesCard";
+import { useAutoUpdateDate } from "./hooks/useAutoUpdateDate";
 
 export default function BentoPage() {
+  useAutoUpdateDate();
+
   return (
     <div className="h-screen w-screen items-center justify-center overflow-y-auto bg-[#f5f5f5] py-10">
       <div className="flex items-center justify-center">

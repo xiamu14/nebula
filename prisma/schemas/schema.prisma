@@ -15,3 +15,29 @@ model Weight {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+enum DietCategory {
+  BREAKFAST
+  LUNCH
+  DINNER
+  FRUIT
+}
+
+enum DietStatus {
+  PENDING
+  DONE
+}
+
+model DietPlan {
+  id        Int         @id @default(autoincrement())
+  name      String
+  amount    Decimal     @db.Decimal(5, 2)
+  unit      String
+  category  DietCategory
+  status    DietStatus  @default(PENDING)
+  date      DateTime
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([date, category])
+}
