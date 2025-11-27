@@ -41,3 +41,26 @@ model DietPlan {
 
   @@index([date, category])
 }
+
+model Exercise {
+  id      Int @id @default(autoincrement())
+  name    String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  records ExerciseRecord[]
+}
+
+model ExerciseRecord {
+  id          Int      @id @default(autoincrement())
+  exerciseId  Int
+  date        DateTime
+  duration    Int      @default(0) // 运动时长，单位：分钟
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  exercise    Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@unique([exerciseId, date])
+  @@index([date])
+}

@@ -15,6 +15,7 @@ import {
   Legend,
   Line,
   LineChart,
+  ReferenceLine,
   Tooltip,
   XAxis,
   YAxis,
@@ -124,9 +125,15 @@ export default function WeightCard() {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" />
-            <YAxis width="auto" />
+            <YAxis width="auto" domain={[60, 80]} />
             <Tooltip />
             <Legend />
+            <ReferenceLine
+              y={66}
+              label="Target"
+              stroke="#fa7e5e"
+              strokeDasharray="3 3"
+            />
 
             <Line type="monotone" dataKey="weight" stroke="#17c964" />
           </LineChart>

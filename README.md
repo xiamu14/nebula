@@ -2,19 +2,14 @@
 
 ### 当前任务：
 
-1. 建立 diet plan 表，一个 TODO list, 有 status 状态, pending, done 等，默认pending。 包含食物 name、 份量，单位 k 或 ml、分类 category 只有 breakfast, lunch，dinner, fruit。日期 date。 实现增删改查 api ，用于 app/components/CateringPlanCard.tsx 中。
-
-2. 完成 CateringPlanCard.tsx 里根据currentDateState 查询日期对应所有的Diet plan ，按照 category ，显示到不同 Tab 中。
-
-3. check 更新 status 状态为 done。
-
-4. 删除的 UI 在 tab launch 里有实现。
-
-5. new 按钮实现增加 currentDateState 日期时，active tab 对应的 category 下的 diet 项。
+1. 为 ExerciseCard 组件增加 exercise 表，数据结构是每日运动项目的运动量，默认运动（可能调整，数据库里要动态， 只包含 name）包含 Rope Skipping , warm up , hiit ，运动量单位是运动的时长。
+2. 完成 ExerciseCard 组件里 展示 currentDateState 日期对应的运动项目和运动时长，当没有更新运动时长，默认为 0 。
+3. 点击 ExerciseCard 里的 Update ， 弹出更新运动量的 Modal 组件，可以分别更新默认运动时长。
 
 ### 已完成任务
 
-WeightCard.tsx 已完成，不要变动，可以参考代码。
+WeightCard.tsx 已完成，不要变动。
+CateringPlanCard.tsx 已完成，不要变动
 
 ### 代码实现规范：
 
