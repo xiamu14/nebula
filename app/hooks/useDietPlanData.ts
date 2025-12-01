@@ -5,6 +5,7 @@ import {
   formatDateForAPI,
   DietCategory,
 } from "@/app/utils/dietPlanUtils";
+import { currentDateState } from "../store/global.state";
 
 // 获取饮食计划数据的 API 调用
 async function fetchDietPlanData(date: Date, category?: DietCategory) {
@@ -23,7 +24,8 @@ async function fetchDietPlanData(date: Date, category?: DietCategory) {
 }
 
 // 使用 hook 加载指定日期的饮食计划数据
-export function useDietPlanData(date: Date, category?: DietCategory) {
+export function useDietPlanData(category?: DietCategory) {
+  const date = currentDateState.day.toDate();
   const [data, setData] = useState<DietPlan[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -45,7 +47,7 @@ export function useDietPlanData(date: Date, category?: DietCategory) {
 
   useEffect(() => {
     loadData();
-  }, [date, category]);
+  }, [category]);
 
   return { data, isLoading, error, refetch: loadData };
 }

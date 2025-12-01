@@ -14,7 +14,11 @@ import {
   TextField,
 } from "@heroui/react";
 import { currentDateState } from "@/app/store/global.state";
-import { useExerciseData, saveExerciseRecord, Exercise } from "@/app/hooks/useExerciseData";
+import {
+  useExerciseData,
+  saveExerciseRecord,
+  Exercise,
+} from "@/app/hooks/useExerciseData";
 import { formatDate } from "@/app/utils/dateUtils";
 import { isValidDuration, formatDuration } from "@/app/utils/exerciseUtils";
 import { Icon } from "@iconify/react";
@@ -23,8 +27,8 @@ import { Icon } from "@iconify/react";
 function getAvatarColor(name: string): string {
   const colors = {
     "Rope Skipping": "blue",
-    "warm up": "green",
-    "hiit": "purple",
+    "Warm Up": "green",
+    HIIT: "purple",
   };
   return colors[name as keyof typeof colors] || "default";
 }
@@ -36,13 +40,17 @@ function getInitials(name: string): string {
 
 export default function ExerciseCard() {
   const currentDate = useSnapshot(currentDateState);
-  const [inputValues, setInputValues] = useState<{ [exerciseId: number]: string }>({});
-  const [errorMessages, setErrorMessages] = useState<{ [exerciseId: number]: string }>({});
+  const [inputValues, setInputValues] = useState<{
+    [exerciseId: number]: string;
+  }>({});
+  const [errorMessages, setErrorMessages] = useState<{
+    [exerciseId: number]: string;
+  }>({});
+
+  const date = currentDateState.day.toDate().toISOString();
 
   // 加载运动数据
-  const { data, isLoading, error, setData } = useExerciseData(
-    currentDate.day.toDate().toISOString(),
-  );
+  const { data, isLoading, error, setData } = useExerciseData(date);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 当日期改变或数据加载完成时，初始化输入值
@@ -93,7 +101,7 @@ export default function ExerciseCard() {
       }
 
       // 保存所有运动记录
-      const date = currentDate.day.toDate();
+      const date = currentDateState.day.toDate();
       const promises = Object.entries(inputValues).map(([exerciseId, value]) =>
         saveExerciseRecord(parseInt(exerciseId, 10), date, parseInt(value, 10)),
       );
@@ -114,7 +122,9 @@ export default function ExerciseCard() {
           exerciseId: parseInt(exerciseId, 10),
           date: date.toISOString(),
           duration,
-          exercise: data.exercises.find((e) => e.id === parseInt(exerciseId, 10)),
+          exercise: data.exercises.find(
+            (e) => e.id === parseInt(exerciseId, 10),
+          ),
         })),
       });
 
@@ -133,7 +143,11 @@ export default function ExerciseCard() {
     const duration = data.durations[exercise.id] || 0;
 
     return (
-      <ListBox.Item key={exercise.id} id={exercise.id.toString()} textValue={exercise.name}>
+      <ListBox.Item
+        key={exercise.id}
+        id={exercise.id.toString()}
+        textValue={exercise.name}
+      >
         <Avatar size="sm">
           <Avatar.Image
             alt={exercise.name}
@@ -159,7 +173,9 @@ export default function ExerciseCard() {
           <Card.Title>Exercise</Card.Title>
         </Card.Header>
         <Card.Content>
-          <Description className="text-red-500">Error loading exercise data: {error}</Description>
+          <Description className="text-red-500">
+            Error loading exercise data: {error}
+          </Description>
         </Card.Content>
       </Card>
     );
@@ -174,7 +190,11 @@ export default function ExerciseCard() {
         {isLoading ? (
           <Description>Loading...</Description>
         ) : (
-          <ListBox aria-label="Exercises" className="w-[220px]" selectionMode="none">
+          <ListBox
+            aria-label="Exercises"
+            className="w-[220px]"
+            selectionMode="none"
+          >
             {data.exercises.map(renderExerciseItem)}
           </ListBox>
         )}
@@ -192,16 +212,13 @@ export default function ExerciseCard() {
           }}
         >
           <Button variant="ghost">Update</Button>
-          <Modal.Container>
+          <Modal.Container className="">
             <Modal.Dialog className="sm:max-w-[360px]">
               {({ close }) => (
                 <>
                   <Modal.CloseTrigger />
                   <Modal.Header>
-                    <Modal.Icon className="bg-default text-foreground">
-                      <Icon className="size-5" icon="gravity-ui:rocket" />
-                    </Modal.Icon>
-                    <Modal.Heading>Update Exercise Duration</Modal.Heading>
+                    <Modal.Heading>Update Exercise</Modal.Heading>
                   </Modal.Header>
                   <Modal.Body>
                     <Description className="mb-4">
@@ -229,7 +246,7 @@ export default function ExerciseCard() {
                               <InputGroup.Suffix>mins</InputGroup.Suffix>
                             </InputGroup>
                             {errorMessages[exercise.id] && (
-                              <Description className="text-red-500 mt-1">
+                              <Description className="mt-1 text-red-500">
                                 {errorMessages[exercise.id]}
                               </Description>
                             )}
@@ -237,7 +254,7 @@ export default function ExerciseCard() {
                         </div>
                       ))}
                       {errorMessages[0] && (
-                        <Description className="text-red-500 mt-4">
+                        <Description className="mt-4 text-red-500">
                           {errorMessages[0]}
                         </Description>
                       )}

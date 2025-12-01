@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, memo } from "react";
 import { useSnapshot } from "valtio";
 import {
   Button,
@@ -38,25 +38,86 @@ import {
 } from "@/app/hooks/useDietPlanData";
 import type { Key } from "react-aria-components";
 import { currentDateState } from "../store/global.state";
+import Empty from "./ui/Empty";
+
+function PlansCheckboxComponent({
+  plans,
+  activeTab,
+  onStatusChange,
+  onDelete,
+}: {
+  plans: DietPlan[];
+  activeTab: string;
+  onStatusChange: (plan: DietPlan, isChecked: boolean) => void;
+  onDelete: (plan: DietPlan) => void;
+}) {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  console.log(
+    "%c some",
+    "background: #69c0ff; color: white; padding: 4px",
+    plans,
+    activeTab,
+  );
+  if (plans.length === 0) {
+    return (
+      <div className="flex w-full items-center justify-center py-4 text-center text-gray-500">
+        <Empty />
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex w-full flex-col items-start justify-start gap-2">
+      {plans.map((plan, index) => {
+        return (
+          <Checkbox
+            key={plan.id}
+            value={String(plan.id)}
+            isSelected={plan.status === "DONE"}
+            onChange={(isChecked: boolean) => {
+              onStatusChange(plan, isChecked);
+            }}
+            onMouseEnter={() => setHoveredIndex(index)}
+            onMouseLeave={() => setHoveredIndex(null)}
+            className="flex w-full"
+          >
+            <Checkbox.Control>
+              <Checkbox.Indicator />
+            </Checkbox.Control>
+            <Checkbox.Content>
+              <Label>{plan.name}</Label>
+              <Description>
+                {plan.amount}
+                {plan.unit}
+              </Description>
+            </Checkbox.Content>
+            <div className="flex-1"></div>
+            {hoveredIndex === index && (
+              <CloseButton
+                onClick={() => onDelete(plan)}
+                aria-label="Delete item"
+              />
+            )}
+          </Checkbox>
+        );
+      })}
+    </div>
+  );
+}
+
+const PlansCheckbox = memo(PlansCheckboxComponent);
 
 export default function CateringPlanCard() {
   const currentDate = useSnapshot(currentDateState).day;
   const [activeTab, setActiveTab] = useState<TabKey>("breakfastPlans");
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [newItemName, setNewItemName] = useState("");
   const [newItemAmount, setNewItemAmount] = useState("100");
   const [newItemUnit, setNewItemUnit] = useState<Key | null>("g");
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 缓存当前日期以避免无限渲染
-  const currentDateForQuery = useMemo(
-    () => currentDateState.day.toDate(),
-    [currentDateState.day],
-  );
-
   // 获取所有分类的饮食计划数据
-  const { data: allPlans, refetch } = useDietPlanData(currentDateForQuery);
+  const { data: allPlans, refetch } = useDietPlanData();
 
   // 按分类过滤数据
   const getPlansByCategory = (category: DietCategory): DietPlan[] => {
@@ -150,51 +211,6 @@ export default function CateringPlanCard() {
     }
   };
 
-  const renderCheckboxGroup = (plans: DietPlan[]) => {
-    if (plans.length === 0) {
-      return (
-        <div className="py-4 text-center text-gray-500">
-          Empty. Click "New" to add.
-        </div>
-      );
-    }
-
-    return (
-      <CheckboxGroup name={activeTab}>
-        {plans.map((plan, index) => (
-          <Checkbox
-            key={plan.id}
-            value={String(plan.id)}
-            isSelected={plan.status === "DONE"}
-            onChange={(isChecked: boolean) => {
-              handleStatusChange(plan, isChecked);
-            }}
-            onMouseEnter={() => setHoveredIndex(index)}
-            onMouseLeave={() => setHoveredIndex(null)}
-          >
-            <Checkbox.Control>
-              <Checkbox.Indicator />
-            </Checkbox.Control>
-            <Checkbox.Content>
-              <Label>{plan.name}</Label>
-              <Description>
-                {plan.amount}
-                {plan.unit}
-              </Description>
-            </Checkbox.Content>
-            <div className="flex-1"></div>
-            {hoveredIndex === index && (
-              <CloseButton
-                onClick={() => handleDelete(plan)}
-                aria-label="Delete item"
-              />
-            )}
-          </Checkbox>
-        ))}
-      </CheckboxGroup>
-    );
-  };
-
   return (
     <Card className="h-full w-full">
       <Card.Header>
@@ -227,16 +243,40 @@ export default function CateringPlanCard() {
             </Tabs.List>
           </Tabs.ListContainer>
           <Tabs.Panel className="pt-4" id="breakfastPlans" key="breakfastPlans">
-            {renderCheckboxGroup(breakfastPlans)}
+            <PlansCheckbox
+              key="breakfastPlans"
+              plans={breakfastPlans}
+              activeTab="breakfastPlans"
+              onDelete={handleDelete}
+              onStatusChange={handleStatusChange}
+            />
           </Tabs.Panel>
           <Tabs.Panel className="pt-4" id="lunchPlans" key="lunchPlans">
-            {renderCheckboxGroup(lunchPlans)}
+            <PlansCheckbox
+              key="lunchPlans"
+              plans={lunchPlans}
+              activeTab="lunchPlans"
+              onDelete={handleDelete}
+              onStatusChange={handleStatusChange}
+            />
           </Tabs.Panel>
           <Tabs.Panel className="pt-4" id="dinnerPlans" key="dinnerPlans">
-            {renderCheckboxGroup(dinnerPlans)}
+            <PlansCheckbox
+              key="dinnerPlans"
+              plans={dinnerPlans}
+              activeTab="dinnerPlans"
+              onDelete={handleDelete}
+              onStatusChange={handleStatusChange}
+            />
           </Tabs.Panel>
           <Tabs.Panel className="pt-4" id="fruitPlans" key="fruitPlans">
-            {renderCheckboxGroup(fruitPlans)}
+            <PlansCheckbox
+              key="fruitPlans"
+              plans={fruitPlans}
+              activeTab="fruitPlans"
+              onDelete={handleDelete}
+              onStatusChange={handleStatusChange}
+            />
           </Tabs.Panel>
         </Tabs>
       </Card.Content>

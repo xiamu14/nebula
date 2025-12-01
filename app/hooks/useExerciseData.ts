@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { currentDateState } from "../store/global.state";
 
 export interface Exercise {
   id: number;
@@ -30,7 +31,7 @@ async function fetchExerciseData(date?: string) {
 }
 
 // 使用 hook 加载运动数据
-export function useExerciseData(date?: string) {
+export function useExerciseData(date: string) {
   const [data, setData] = useState<ExerciseData>({
     exercises: [],
     records: [],
