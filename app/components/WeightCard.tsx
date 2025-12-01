@@ -123,13 +123,13 @@ export default function WeightCard() {
               bottom: 5,
             }}
           >
-            <CartesianGrid strokeDasharray="3 3" />
+            {/* <CartesianGrid strokeDasharray="3 3" /> */}
             <XAxis dataKey="date" />
-            <YAxis width="auto" domain={[60, 80]} />
+            <YAxis width="auto" domain={[50, 80]} />
             <Tooltip />
             <Legend />
             <ReferenceLine
-              y={66}
+              y={60}
               label="Target"
               stroke="#fa7e5e"
               strokeDasharray="3 3"
