@@ -30,7 +30,7 @@ export async function DELETE(request, { params }) {
 
     // 从 tags 数组中移除指定的 tag
     const currentTags = Array.isArray(emotion.tags) ? emotion.tags : [];
-    const updatedTags = currentTags.filter((t) => t !== tag);
+    const updatedTags = currentTags.filter((t) => t.name !== tag);
 
     // 如果移除后没有 tags，删除整个记录
     if (updatedTags.length === 0) {

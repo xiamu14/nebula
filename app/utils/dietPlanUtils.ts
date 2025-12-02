@@ -34,6 +34,10 @@ export function validateDietPlanForm(data: DietPlanFormData): string[] {
     errors.push("Amount must be a positive number");
   }
 
+  if (data.amount > 9999.99) {
+    errors.push("Amount must not exceed 9999.99");
+  }
+
   if (!data.unit || !["g", "ml"].includes(data.unit)) {
     errors.push("Unit must be either 'g' or 'ml'");
   }

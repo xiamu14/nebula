@@ -329,6 +329,9 @@ export default function CateringPlanCard() {
                                   setErrorMessage("");
                                 }}
                                 type="number"
+                                min={0}
+                                max={9999.99}
+                                step={0.01}
                               />
                               <Select
                                 className="w-[120px]"

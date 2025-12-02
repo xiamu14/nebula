@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "DietPlan" ALTER COLUMN "amount" SET DATA TYPE DECIMAL(6,2);

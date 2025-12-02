@@ -31,7 +31,7 @@ enum DietStatus {
 model DietPlan {
   id        Int         @id @default(autoincrement())
   name      String
-  amount    Decimal     @db.Decimal(5, 2)
+  amount    Decimal     @db.Decimal(6, 2)
   unit      String
   category  DietCategory
   status    DietStatus  @default(PENDING)

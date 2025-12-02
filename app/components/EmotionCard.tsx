@@ -86,56 +86,58 @@ export default function EmotionCard() {
       <Card.Header>
         <Card.Title>Emotion</Card.Title>
       </Card.Header>
-      <Card.Content className="flex flex-row flex-wrap items-start justify-start gap-2">
-        {currentTags.map((tag) => (
-          <Chip
-            key={tag.name}
-            color={getChipColor(tag.color)}
-            variant="primary"
-          >
-            <Icon icon="gravity-ui:circle-fill" width={6} />
-            {tag.name}
-            <Icon
-              icon="gravity-ui:circle-minus"
-              width={12}
-              className="cursor-pointer"
-              onClick={() => handleDeleteTag(tag.name)}
-            />
-          </Chip>
-        ))}
-
-        <Popover>
-          <Popover.Trigger>
-            <Chip className="cursor-pointer">
-              <Icon icon="gravity-ui:circle-dashed" width={12} />
-              New
+      <Card.Content>
+        <div className="flex flex-row flex-wrap items-start justify-start gap-2">
+          {currentTags.map((tag) => (
+            <Chip
+              key={tag.name}
+              color={getChipColor(tag.color)}
+              variant="primary"
+            >
+              <Icon icon="gravity-ui:circle-fill" width={6} />
+              {tag.name}
+              <Icon
+                icon="gravity-ui:circle-minus"
+                width={12}
+                className="cursor-pointer"
+                onClick={() => handleDeleteTag(tag.name)}
+              />
             </Chip>
-          </Popover.Trigger>
-          <Popover.Content className="max-w-200">
-            <Popover.Dialog>
-              <Popover.Heading>Update Emotion</Popover.Heading>
-              <div className="flex flex-col items-start justify-start gap-4 py-4">
-                <div className="flex flex-wrap gap-2">
-                  {DEFAULT_EMOTIONS.map((emotion) => (
-                    <Chip
-                      key={emotion.name}
-                      className="cursor-pointer"
-                      color={getChipColor(emotion.color)}
-                      variant={
-                        currentTags.some((t) => t.name === emotion.name)
-                          ? "primary"
-                          : "soft"
-                      }
-                      onClick={() => handleAddEmotion(emotion)}
-                    >
-                      {emotion.name}
-                    </Chip>
-                  ))}
+          ))}
+
+          <Popover>
+            <Popover.Trigger>
+              <Chip className="cursor-pointer">
+                <Icon icon="gravity-ui:circle-dashed" width={12} />
+                New
+              </Chip>
+            </Popover.Trigger>
+            <Popover.Content className="max-w-200">
+              <Popover.Dialog>
+                <Popover.Heading>Update Emotion</Popover.Heading>
+                <div className="flex flex-col items-start justify-start gap-4 py-4">
+                  <div className="flex flex-wrap gap-2">
+                    {DEFAULT_EMOTIONS.map((emotion) => (
+                      <Chip
+                        key={emotion.name}
+                        className="cursor-pointer"
+                        color={getChipColor(emotion.color)}
+                        variant={
+                          currentTags.some((t) => t.name === emotion.name)
+                            ? "primary"
+                            : "soft"
+                        }
+                        onClick={() => handleAddEmotion(emotion)}
+                      >
+                        {emotion.name}
+                      </Chip>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </Popover.Dialog>
-          </Popover.Content>
-        </Popover>
+              </Popover.Dialog>
+            </Popover.Content>
+          </Popover>
+        </div>
       </Card.Content>
     </Card>
   );
