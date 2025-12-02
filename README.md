@@ -2,14 +2,16 @@
 
 ### 当前任务：
 
-1. 为 ExerciseCard 组件增加 exercise 表，数据结构是每日运动项目的运动量，默认运动（可能调整，数据库里要动态， 只包含 name）包含 Rope Skipping , warm up , hiit ，运动量单位是运动的时长。
-2. 完成 ExerciseCard 组件里 展示 currentDateState 日期对应的运动项目和运动时长，当没有更新运动时长，默认为 0 。
-3. 点击 ExerciseCard 里的 Update ， 弹出更新运动量的 Modal 组件，可以分别更新默认运动时长。
+1. 为 EmotionCard 组件增加 emotions 表，数据结构是每日的情绪 tags, 每日一个记录，tags 保存数组即可。
+2. 完成 EmotionCard 组件里 展示 currentDateState 时所有的 tag，点击 emotion tag 后的 gravity-ui:circle-minus 按钮删除 。
+3. 点击 EmotionCard 里的 Clip 内容为 new 的添加， 默认 4 中情绪： 平静 ，喜悦, 沮丧， 积极， 分别对应 clip 的 default , success, danger, warning.
+4. 完成 EmotionCard 里的 todo 任务
 
 ### 已完成任务
 
 WeightCard.tsx 已完成，不要变动。
-CateringPlanCard.tsx 已完成，不要变动
+CateringPlanCard.tsx 已完成，不要变动。
+ExerciseCard.tsx 已完成，不要变动。
 
 ### 代码实现规范：
 

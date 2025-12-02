@@ -64,3 +64,11 @@ model ExerciseRecord {
   @@unique([exerciseId, date])
   @@index([date])
 }
+
+model Emotion {
+  id        Int      @id @default(autoincrement())
+  date      DateTime @unique
+  tags      Json     // 存储情绪标签数组
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

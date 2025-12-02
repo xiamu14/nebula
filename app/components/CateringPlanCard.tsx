@@ -52,12 +52,7 @@ function PlansCheckboxComponent({
   onDelete: (plan: DietPlan) => void;
 }) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  console.log(
-    "%c some",
-    "background: #69c0ff; color: white; padding: 4px",
-    plans,
-    activeTab,
-  );
+
   if (plans.length === 0) {
     return (
       <div className="flex w-full items-center justify-center py-4 text-center text-gray-500">
