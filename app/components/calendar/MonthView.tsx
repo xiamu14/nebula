@@ -46,7 +46,7 @@ export default function MonthView({
 
       const dataMap: Record<string, DayData> = {};
       if (days && Array.isArray(days)) {
-        days.forEach((day: any) => {
+        days.forEach((day: { date: string; struct?: { enrichmentScore?: number; mood?: Record<string, number> } }) => {
           const dateStr = new Date(day.date).toISOString().split("T")[0];
           dataMap[dateStr] = {
             date: dateStr,
